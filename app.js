@@ -22,7 +22,7 @@ const TaskCtrl = (function(){
   // Data structure / state
   const data = {
     items: [
-      {id: 0, title:'Create restaurant site', stage1:'Research other sites', stage2:'Source images', stage3:'Learn flexbox', priority:'High'},
+      {id: 0, title:'Create monkey site', stage1:'Research other sites', stage2:'Source images', stage3:'Learn flexbox', priority:'High'},
       {id: 1, title:'Learn React', stage1:'Complete Udemy Course', stage2:'Research hooks', stage3:'Select project', priority:'Medium'}
     ],
     // The task currently selected to be edited
@@ -50,14 +50,29 @@ const TaskCtrl = (function(){
 // *******************************************************************************
 
 const UICtrl = (function(){
-  
+  // Object contains references to the various selectors needed within the UI Controller (allows these to be easily changed in html as only needs to be edited here in js)
+  const UISelectors = {
+    tasksContainer: '.tasksContainer'
+  }
+
   return {
     populateTasks: function(tasks) {
       html = '';
 
       tasks.forEach((task) => {
         console.log(task);
-        
+        let currentTask = document.createElement('div');
+        currentTask.className = 'taskItem';
+        currentTask.innerHTML = `
+        <h4 class="taskTitle">${task.title}</h4>
+        <ol>
+          <li>${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li>${task.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li>${task.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+        </ol>
+        <p>Priority: ${task.priority}</p>
+        `;
+        document.querySelector(UISelectors.tasksContainer).appendChild(currentTask);
       });
     }
   }
