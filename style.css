@@ -48,6 +48,10 @@
   color: rgb(116, 116, 116);
 }
 
+.taskStage {
+  list-style-type: none;
+}
+
 li {
   padding-left: 5px;
 }

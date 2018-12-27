@@ -32,10 +32,14 @@ const TaskCtrl = (function(){
   }
 
   return {
+    // Retrieves existing tasks from the data structure
     getItems: function(){
       return data.items;
     },
-    
+    // Adds new item to data structure
+    addTask: function(title, ...info){
+      console.log(title);
+    },
     logData: function(){
       return data;
     }
@@ -52,7 +56,14 @@ const TaskCtrl = (function(){
 const UICtrl = (function(){
   // Object contains references to the various selectors needed within the UI Controller (allows these to be easily changed in html as only needs to be edited here in js)
   const UISelectors = {
-    tasksContainer: '.tasksContainer'
+    tasksContainer: '.tasksContainer',
+    // Form selectors
+    taskTitle: '#taskTitle',
+    taskStage1: '#taskStage1',
+    taskStage2: '#taskStage2',
+    taskStage3: '#taskStage3',
+    taskPriority: '#taskPriority',
+    taskSubmit: '#taskSubmit'
   }
 
   return {
@@ -60,20 +71,33 @@ const UICtrl = (function(){
       html = '';
 
       tasks.forEach((task) => {
-        console.log(task);
         let currentTask = document.createElement('div');
         currentTask.className = 'taskItem';
         currentTask.innerHTML = `
         <h4 class="taskTitle">${task.title}</h4>
-        <ol>
-          <li>${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-          <li>${task.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-          <li>${task.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-        </ol>
         <p>Priority: ${task.priority}</p>
+        <ul>
+          <li class="taskStage">${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li class="taskStage">${task.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li class="taskStage">${task.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+        </ul>
         `;
         document.querySelector(UISelectors.tasksContainer).appendChild(currentTask);
       });
+    },
+    // Returns form user input
+    getTaskInput: function(){
+      return {
+        title: taskTitle.value,
+        stage1: taskStage1.value,
+        stage2: taskStage2.value,
+        stage3: taskStage3.value,
+        priority: taskPriority.value
+      }
+    },    
+    // Make UISelectors public
+    getUISelectors: function(){
+      return UISelectors;
     }
   }
 })();
@@ -85,7 +109,34 @@ const UICtrl = (function(){
 // *******************************************************************************
 
 const App = (function(TaskCtrl, UICtrl){
-  // console.log(TaskCtrl.logData());
+
+  // Event listeners function
+  const loadEventListeners = function(){
+    // Get UI Selectors
+    const UISelectors = UICtrl.getUISelectors();
+
+    // Add item event
+    document.querySelector(UISelectors.taskSubmit).addEventListener('click', taskAddSubmit);
+  }
+
+  // Add task submit
+  const taskAddSubmit = function(e){
+    // Get the data submitted by user
+    const formInput = UICtrl.getTaskInput();
+
+    // Ensure that task has been given a title
+    if(formInput.title !==''){
+      // Add task
+      const newTask = TaskCtrl.addTask(...formInput);
+      console.log(newTask);
+    } else {
+      // Possibly add alert message in div under field
+    }
+    
+
+    e.preventDefault(); 
+  }
+
 
   return {
     init: function(){
@@ -94,6 +145,9 @@ const App = (function(TaskCtrl, UICtrl){
       
       // Populate UI with tasks
       UICtrl.populateTasks(tasks);
+
+      // Load event listeners
+      loadEventListeners();
     }
   }
 })(TaskCtrl, UICtrl);
