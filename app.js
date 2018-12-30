@@ -11,6 +11,7 @@
 const TaskCtrl = (function(){
   // Item constructor
   const Task = function(id, title, stage1, stage2, stage3, priority){
+    this.id = id;
     this.title = title;
     this.stage1 = stage1;
     this.stage2 = stage2;
@@ -21,10 +22,11 @@ const TaskCtrl = (function(){
 
   // Data structure / state
   const data = {
-    items: [
-      {id: 0, title:'Create monkey site', stage1:'Research other sites', stage2:'Source images', stage3:'Learn flexbox', priority:'High'},
-      {id: 1, title:'Learn React', stage1:'Complete Udemy Course', stage2:'Research hooks', stage3:'Select project', priority:'Medium'}
-    ],
+    items: [],
+    // items: [
+    //   {id: 0, title:'Create monkey site', stage1:'Research other sites', stage2:'Source images', stage3:'Learn flexbox', priority:'High'},
+    //   {id: 1, title:'Learn React', stage1:'Complete Udemy Course', stage2:'Research hooks', stage3:'Select project', priority:'Medium'}
+    // ],
     // The task currently selected to be edited
     currentTask: null,
     // The stage currently selected to be added to current task tracking
@@ -37,8 +39,24 @@ const TaskCtrl = (function(){
       return data.items;
     },
     // Adds new item to data structure
-    addTask: function(title, ...info){
-      console.log(title);
+    addTask: function(title, stage1, stage2, stage3, priority){
+      let ID;
+      // Create ID for task being added
+      if(data.items.length > 0){
+        // ID is set to 1 more than the id of the last item present
+        ID = data.items[data.items.length - 1].id +1;
+      } else {
+        // If there are no tasks already present, set this first task to have an id of 0
+        ID = 0;
+      }
+
+      // Create new task in data structure
+      newTask = new Task(ID, title, stage1, stage2, stage3, priority);
+
+      // Add newly create task to the items array
+      data.items.push(newTask);
+
+      return newTask;      
     },
     logData: function(){
       return data;
@@ -74,7 +92,7 @@ const UICtrl = (function(){
         let currentTask = document.createElement('div');
         currentTask.className = 'taskItem';
         currentTask.innerHTML = `
-        <h4 class="taskTitle">${task.title}</h4>
+        <h4 class="taskTitle">${task.title}<i class="fas fa-pen"></i></h4>
         <p>Priority: ${task.priority}</p>
         <ul>
           <li class="taskStage">${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
@@ -95,6 +113,31 @@ const UICtrl = (function(){
         priority: taskPriority.value
       }
     },    
+    // Add new item to the UI
+    addListItem: function(newTask){
+      let task = document.createElement('div');
+      task.className = 'taskItem';
+      task.id = `item-${newTask.id}`;
+      task.innerHTML = `
+        <h4 class="taskTitle">${newTask.title}<i class="fas fa-pen"></i></h4>
+        <p>Priority: ${newTask.priority}</p>
+        <ul>
+          <li class="taskStage">${newTask.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li class="taskStage">${newTask.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li class="taskStage">${newTask.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+        </ul>
+        `;
+        // Insert item
+        document.querySelector(UISelectors.tasksContainer).insertAdjacentElement('beforeend', task);  
+    },
+    // Clear form fields
+    clearForm: function(){
+      taskTitle.value = '';
+      taskStage1.value = '';
+      taskStage2.value = '';
+      taskStage3.value = '';
+      taskPriority.value = '';
+    },
     // Make UISelectors public
     getUISelectors: function(){
       return UISelectors;
@@ -125,14 +168,22 @@ const App = (function(TaskCtrl, UICtrl){
     const formInput = UICtrl.getTaskInput();
 
     // Ensure that task has been given a title
-    if(formInput.title !==''){
+    if(formInput.title !== ''){
       // Add task
-      const newTask = TaskCtrl.addTask(...formInput);
-      console.log(newTask);
-    } else {
-      // Possibly add alert message in div under field
-    }
-    
+      const newTask = TaskCtrl.addTask(formInput.title, formInput.stage1, formInput.stage2, formInput.stage3, formInput.priority);
+
+      // Add new task to the UI list
+      UICtrl.addListItem(newTask);
+
+      // Close the modal window
+      modal.style.display = "none";
+
+      // Clear the form fields
+      UICtrl.clearForm();
+    } 
+    // else {
+    //   // Possibly add alert message in div under field
+    // }
 
     e.preventDefault(); 
   }

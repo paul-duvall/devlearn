@@ -44,6 +44,10 @@
   background: rgba(176, 142, 180, 0.5);
 }
 
+/* .taskItem .pushRight {
+  border: 2px solid red;
+} */
+
 .taskItem .fas {
   color: rgb(116, 116, 116);
 }
@@ -55,10 +59,6 @@
 li {
   padding-left: 5px;
 }
-
-/* .rightNav {
-  border: 2px solid green;
-} */
 
 
 /* ************** The Modal (background) ************** */
