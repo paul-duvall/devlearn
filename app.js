@@ -75,6 +75,10 @@ const UICtrl = (function(){
   // Object contains references to the various selectors needed within the UI Controller (allows these to be easily changed in html as only needs to be edited here in js)
   const UISelectors = {
     tasksContainer: '.tasksContainer',
+    // Add / edit form selectors
+    addBtn: '#add',
+    modal: '#addModal',
+    addModalClose: '#addModalClose',    
     // Form selectors
     taskTitle: '#taskTitle',
     taskStage1: '#taskStage1',
@@ -158,8 +162,26 @@ const App = (function(TaskCtrl, UICtrl){
     // Get UI Selectors
     const UISelectors = UICtrl.getUISelectors();
 
+    // Open modal event
+    document.querySelector(UISelectors.addBtn).addEventListener('click', addModalOpen);
+
+    // Close modal with x event
+    document.querySelector(UISelectors.addModalClose).addEventListener('click', addModalCloseByX);
+
     // Add item event
     document.querySelector(UISelectors.taskSubmit).addEventListener('click', taskAddSubmit);
+  }
+
+  // Open the add task modal
+  const addModalOpen = function(e){  
+    addModal.style.display = "block";
+    e.preventDefault();
+  }
+
+  // Close the add task modal by clicking on the x
+  const addModalCloseByX = function(e){
+    addModal.style.display = "none";
+    e.preventDefault();
   }
 
   // Add task submit
@@ -175,11 +197,11 @@ const App = (function(TaskCtrl, UICtrl){
       // Add new task to the UI list
       UICtrl.addListItem(newTask);
 
-      // Close the modal window
-      modal.style.display = "none";
-
       // Clear the form fields
       UICtrl.clearForm();
+
+      // Close the modal window
+      addModalCloseByX();
     } 
     // else {
     //   // Possibly add alert message in div under field
@@ -191,7 +213,7 @@ const App = (function(TaskCtrl, UICtrl){
 
   return {
     init: function(){
-      // Declare variable for list of tasls from data object 
+      // Declare variable for list of tasks from data object 
       const tasks = TaskCtrl.getItems();
       
       // Populate UI with tasks
@@ -213,26 +235,26 @@ const App = (function(TaskCtrl, UICtrl){
 App.init();
 
 
-// Get the modal
-var modal = document.getElementById('myModal');
-// Get the button that opens the modal
-var btn = document.getElementById("add");
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+// // Get the modal
+// var modal = document.getElementById('addModal');
+// // Get the button that opens the modal
+// var btn = document.getElementById("add");
+// // Get the <span> element that closes the modal
+// var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
+// btn.onclick = function() {
+//   modal.style.display = "block";
+// }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
+// span.onclick = function() {
+//   modal.style.display = "none";
+// }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
+// window.onclick = function(event) {
+//   if (event.target == modal) {
+//     modal.style.display = "none";
+//   }
+// }
