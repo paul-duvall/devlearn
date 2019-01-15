@@ -2,6 +2,28 @@
 // Storage controller
 // *******************************************************************************
 
+const StorageCtrl = (function(){
+  // Public methods
+  return {
+    storeItem: function(newItem){
+      let items = [];
+      // Check to see if there are already items in local storage
+      if(localStorage.getItem('items') === null) {
+        // Runs if there are no items currently in local storage
+        items = [];
+        // Pus new items
+        items.push(newItem);
+        // set local storage
+        localStorage.setItem('items', JSON.stringify(items));
+      } else {
+        items = JSON.parse(localStorage.getItem('items'));
+        items.push(newItem);
+        // Reset local storage
+        localStorage.setItem('items', JSON.stringify(items));
+      }
+    }
+  }
+})();
 
 
 // *******************************************************************************
@@ -52,7 +74,6 @@ const TaskCtrl = (function(){
 
       // Create new task in data structure
       let newTask = new Task(ID, title, stage1, stage2, stage3, priority);
-      console.log(newTask);
       // Add newly create task to the items array
       data.items.push(newTask);
 
@@ -155,7 +176,7 @@ const UICtrl = (function(){
 // App controller
 // *******************************************************************************
 
-const App = (function(TaskCtrl, UICtrl){
+const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   // Event listeners function
   const loadEventListeners = function(){
     // Get UI Selectors
@@ -187,6 +208,8 @@ const App = (function(TaskCtrl, UICtrl){
       const newTask = TaskCtrl.addTask(formInput.title, formInput.stage1, formInput.stage2, formInput.stage3, formInput.priority);
       // Add new task to the UI list
       UICtrl.addListItem(newTask);
+      // Store in local storage
+      StorageCtrl.storeItem(newTask);
       // Clear the form fields
       UICtrl.clearForm();
       // Close the modal window
@@ -210,7 +233,7 @@ const App = (function(TaskCtrl, UICtrl){
       loadEventListeners();
     }
   }
-})(TaskCtrl, UICtrl);
+})(TaskCtrl, StorageCtrl, UICtrl);
 
 
 
