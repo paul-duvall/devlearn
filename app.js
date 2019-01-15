@@ -51,8 +51,8 @@ const TaskCtrl = (function(){
       }
 
       // Create new task in data structure
-      newTask = new Task(ID, title, stage1, stage2, stage3, priority);
-
+      let newTask = new Task(ID, title, stage1, stage2, stage3, priority);
+      console.log(newTask);
       // Add newly create task to the items array
       data.items.push(newTask);
 
@@ -156,60 +156,47 @@ const UICtrl = (function(){
 // *******************************************************************************
 
 const App = (function(TaskCtrl, UICtrl){
-
   // Event listeners function
   const loadEventListeners = function(){
     // Get UI Selectors
     const UISelectors = UICtrl.getUISelectors();
-
     // Open modal event
     document.querySelector(UISelectors.addBtn).addEventListener('click', addModalOpen);
-
     // Close modal with x event
     document.querySelector(UISelectors.addModalClose).addEventListener('click', addModalCloseByX);
-
     // Add item event
     document.querySelector(UISelectors.taskSubmit).addEventListener('click', taskAddSubmit);
   }
-
   // Open the add task modal
   const addModalOpen = function(e){  
     addModal.style.display = "block";
     e.preventDefault();
   }
-
   // Close the add task modal by clicking on the x
   const addModalCloseByX = function(e){
     addModal.style.display = "none";
     e.preventDefault();
   }
-
   // Add task submit
   const taskAddSubmit = function(e){
     // Get the data submitted by user
     const formInput = UICtrl.getTaskInput();
-
     // Ensure that task has been given a title
     if(formInput.title !== ''){
       // Add task
       const newTask = TaskCtrl.addTask(formInput.title, formInput.stage1, formInput.stage2, formInput.stage3, formInput.priority);
-
       // Add new task to the UI list
       UICtrl.addListItem(newTask);
-
       // Clear the form fields
       UICtrl.clearForm();
-
       // Close the modal window
-      addModalCloseByX();
+      addModal.style.display = "none";
     } 
     // else {
     //   // Possibly add alert message in div under field
     // }
-
     e.preventDefault(); 
   }
-
 
   return {
     init: function(){
