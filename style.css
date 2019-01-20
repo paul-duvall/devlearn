@@ -1,18 +1,47 @@
+:root {
+  /* --light-yellow: rgb(236, 184, 93);
+  --dark-yellow: rgb(226, 164, 57); */
+  --light-yellow: #FFC66B;
+  --dark-yellow: rgb(202, 149, 64);
+  --darkest-blue: rgb(57, 73, 116);
+  --dark-blue: #5A6A95;
+  --light-blue: #3B79A1;
+}
+
 * {
   margin: 0;
   padding: 0;
 }
 
+.container {
+  /* border: 2px solid blue; */
+}
+
 /* *************** Navigation bar *************** */
 
-.add {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  border: 2px solid rgb(219, 162, 63);
-  background-color: #EFBA5F;
-  text-align: center;
-  color: #B08EB4;
+.navbar {
+  background: var(--dark-blue);
+  width: 100%;
+  margin: 0;
+}
+
+.navbar-logo {
+  color: var(--darkest-blue);
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.navbar-logo:hover {
+  color: var(--darkest-blue);
+}
+
+.fa-plus-circle {
+  color: var(--light-yellow);
+  font-size: 3rem;
+}
+
+.fa-plus-circle:hover {
+  color: var(--dark-yellow);
 }
 
 .navbar {
@@ -24,14 +53,29 @@
   font-size: 1.8rem;
 }
 
-.container {
-  /* border: 2px solid blue; */
+/* *************** Right navigation *************** */
+
+.rightNav {
+  background: var(--darkest-blue);
+}
+
+.rightNav ul {
+  padding: 1rem;
+}
+
+.rightNav ul li {
+  padding: .5rem;
+}
+
+.rightNav ul li a {
+  color: var(--light-yellow);
+  text-decoration: none;
 }
 
 /* *************** Tasks *************** */
 
 .tasksContainer {
-  /* border: 2px solid red; */
+  background: var(--darkest-blue);
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
@@ -44,12 +88,8 @@
   background: rgba(176, 142, 180, 0.5);
 }
 
-/* .taskItem .pushRight {
-  border: 2px solid red;
-} */
-
 .taskItem .fas {
-  color: rgb(116, 116, 116);
+  color: var(--dark-yellow);
 }
 
 .taskStage {
@@ -60,6 +100,16 @@ li {
   padding-left: 5px;
 }
 
+
+/* ************** The Modal (background) ************** */
+
+.rightNav {
+  text-align: right;
+}
+
+.rightNav ul li {
+  list-style: none;
+}
 
 /* ************** The Modal (background) ************** */
 .modal {

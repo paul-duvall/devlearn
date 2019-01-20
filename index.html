@@ -11,28 +11,33 @@
 </head>
 <body>
   
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">DevLearn</a>
-    
-      <button id = "add" class="btn add secondary-content"><a href="#"><i class="fas fa-plus"></i></a></button>
-    
-  </nav>
+  <!-- <div class="container"> -->
+      <!-- <div class="container"> -->
+          <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand navbar-logo" href="#">DevLearn</a>    
+            <a id="add" href="#"><i class="fas fa-plus-circle"></i></a>
+            <!-- <button id = "add" class="btn add secondary-content"></button> -->  
+          </nav>
+        <!-- </div> -->
+      
+        <!-- <div class="container"> -->
+          <div class="row">
+            <div class="col-9 tasksContainer">
+              <div class="t"></div>
+            </div>
+            <div class="col-3 rightNav">
+              <ul>
+                <li><a href="#">Task tracker <i class="fas fa-tasks"></i></a></li>
+                <li><a href="#">Current to do <i class="fas fa-clipboard-check"></i></a></li>
+                <li><a href="#">Resources <i class="fas fa-tools"></i></a></li>
+                <li><a href="#">Tech tracker <i class="fas fa-laptop"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        <!-- </div> -->
 
-  <div class="container">
-    <div class="row">
-      <div class="col-8 tasksContainer">
-        <div class="t"></div>
-      </div>
-      <div class="col-4 rightNav">
-        <ul>
-          <li>Task tracker</li>
-          <li>Current to do</li>
-          <li>Resources</li>
-          <li>Tech tracker</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <!-- </div> -->
+  
 
   <!-- Adding an item -->
 <div id="addModal" class="modal">
