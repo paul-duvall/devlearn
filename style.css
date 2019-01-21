@@ -1,11 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans+Narrow:700|PT+Sans:400,400i');
+
 :root {
-  /* --light-yellow: rgb(236, 184, 93);
-  --dark-yellow: rgb(226, 164, 57); */
   --light-yellow: #FFC66B;
   --dark-yellow: rgb(202, 149, 64);
+  --darkest-yellow: rgb(165, 117, 40);
+  --almost-black: rgb(43, 43, 43);
   --darkest-blue: rgb(57, 73, 116);
   --dark-blue: #5A6A95;
   --light-blue: #3B79A1;
+  --title-font: 'PT Sans Narrow', sans-serif;
+  --body-font: 'PT Sans', sans-serif;
 }
 
 * {
@@ -23,6 +27,7 @@
   background: var(--dark-blue);
   width: 100%;
   margin: 0;
+  font-family: var(--title-font);
 }
 
 .navbar-logo {
@@ -78,14 +83,17 @@
   background: var(--darkest-blue);
   display: flex;
   flex-wrap: wrap;
-  padding: 10px;
+  padding: 20px;
 }
 
 .taskItem {
   height: 200px;
-  margin: 5px;
+  margin: 10px;
   padding: 20px;
-  background: rgba(176, 142, 180, 0.5);
+  color: var(--almost-black);
+  border-radius: 3px;
+  background: var(--dark-blue);
+  box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.5);
 }
 
 .taskItem .fas {
@@ -101,8 +109,7 @@ li {
 }
 
 
-/* ************** The Modal (background) ************** */
-
+/* ***************** Right navbar ***************** */
 .rightNav {
   text-align: right;
 }
@@ -111,9 +118,9 @@ li {
   list-style: none;
 }
 
-/* ************** The Modal (background) ************** */
+/* ************** The Modal (background) ************* */
 .modal {
-  display: none; /* Hidden by default */
+  display: block; /* (Reset to none) Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
@@ -125,18 +132,32 @@ li {
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+/* Modal Title and x close button */
+.modalTop {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--title-font);
+}
+
+.modalSubtitle {
+  font-family: var(--body-font);
+  font-style: italic;
+}
+
 /* Modal Content/Box */
 .modal-content {
-  background-color: #fefefe;
+  /* background-color: #fefefe; */
+  background-color: var(--dark-blue);
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
-  border: 1px solid #888;
+  color: var(--almost-black);
+  /* border: 1px solid #888; */
   width: 80%; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button */
 .close {
-  color: #aaa;
+  color: var(--almost-black);
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -144,7 +165,7 @@ li {
 
 .close:hover,
 .close:focus {
-  color: black;
+  color: var(--dark-yellow);
   text-decoration: none;
   cursor: pointer;
 }
@@ -152,8 +173,38 @@ li {
 form {
   display: flex;
   flex-direction: column;
+  font-family: var(--body-font);
 }
 
 form button {
   margin-top: 20px;
+}
+
+input[type=text] {
+  background: var(--darkest-blue);
+  border: 0;
+  color: white;
+  padding: 3px 3px 3px 8px;
+}
+
+input[type=text] {
+  background: var(--darkest-blue);
+  border: 0;
+  color: white;
+  padding: 3px 3px 3px 8px;
+}
+
+select {
+  background: var(--darkest-blue);
+  border: 0;
+  color: white;
+}
+
+button[type=submit] {
+  background: var(--dark-yellow);
+  border: none;
+  border-bottom: 2px solid var(--darkest-yellow);
+  width: 200px;
+  height: 30px;
+  
 }
