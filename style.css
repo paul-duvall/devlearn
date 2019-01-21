@@ -120,7 +120,7 @@ li {
 
 /* ************** The Modal (background) ************* */
 .modal {
-  display: block; /* (Reset to none) Hidden by default */
+  display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
@@ -146,12 +146,11 @@ li {
 
 /* Modal Content/Box */
 .modal-content {
-  /* background-color: #fefefe; */
   background-color: var(--dark-blue);
+  color: var(--almost-black);
+  max-width: 550px;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
-  color: var(--almost-black);
-  /* border: 1px solid #888; */
   width: 80%; /* Could be more or less, depending on screen size */
 }
 
