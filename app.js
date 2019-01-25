@@ -6,6 +6,7 @@ const StorageCtrl = (function(){
   // Public methods
   return {
     storeItem: function(newItem){
+      // Runs when a new task is added by the user, adding it also to the ls
       let items = [];
       // Check to see if there are already items in local storage
       if(localStorage.getItem('items') === null) {
@@ -21,6 +22,17 @@ const StorageCtrl = (function(){
         // Reset local storage
         localStorage.setItem('items', JSON.stringify(items));
       }
+    },
+    getItemsFromLS: function(){
+      // Get items from the ls, updating the UI with those items
+      let items;
+      if(localStorage.getItem('items') === null){
+        items = [];
+      } else {
+        items = JSON.parse(localStorage.getItem('items'));
+      }
+      console.log(items);
+      return items;
     }
   }
 })();
@@ -32,19 +44,20 @@ const StorageCtrl = (function(){
 
 const TaskCtrl = (function(){
   // Item constructor
-  const Task = function(id, title, stage1, stage2, stage3, priority){
+  const Task = function(id, title, stage1, stage2, stage3, stages, priority){
     this.id = id;
     this.title = title;
     this.stage1 = stage1;
     this.stage2 = stage2;
     this.stage3 = stage3;
+    this.stages = stages;
     this.priority = priority;
   }
   
 
   // Data structure / state
   const data = {
-    items: [],
+    items: StorageCtrl.getItemsFromLS(),
     // items: [
     //   {id: 0, title:'Create monkey site', stage1:'Research other sites', stage2:'Source images', stage3:'Learn flexbox', priority:'High'},
     //   {id: 1, title:'Learn React', stage1:'Complete Udemy Course', stage2:'Research hooks', stage3:'Select project', priority:'Medium'}
@@ -61,7 +74,7 @@ const TaskCtrl = (function(){
       return data.items;
     },
     // Adds new item to data structure
-    addTask: function(title, stage1, stage2, stage3, priority){
+    addTask: function(title, stage1, stage2, stage3, stages, priority){
       let ID;
       // Create ID for task being added
       if(data.items.length > 0){
@@ -73,10 +86,9 @@ const TaskCtrl = (function(){
       }
 
       // Create new task in data structure
-      let newTask = new Task(ID, title, stage1, stage2, stage3, priority);
+      let newTask = new Task(ID, title, stage1, stage2, stage3, stages, priority);
       // Add newly create task to the items array
       data.items.push(newTask);
-
       return newTask;      
     },
     logData: function(){
