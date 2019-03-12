@@ -91,6 +91,20 @@ const TaskCtrl = (function(){
       data.items.push(newTask);
       return newTask;      
     },
+    // Sets currentTask in data to the task selected from the UI
+    setCurrentTask: function(currentItemID){
+      // checks each item in data structure to see if it matched item in UI
+      data.items.forEach((item) => {
+        // If matches, set item to currentTask
+        if(item.id == currentItemID){
+          data.currentTask = item;
+        }
+      }); 
+    },
+    // Make currentTask public
+    getCurrentTask: function(){
+      return data.currentTask;
+    },
     logData: function(){
       return data;
     }
@@ -118,7 +132,9 @@ const UICtrl = (function(){
     taskStage2: '#taskStage2',
     taskStage3: '#taskStage3',
     taskPriority: '#taskPriority',
-    taskSubmit: '#taskSubmit'
+    taskSubmit: '#taskSubmit',
+    // Task selectors
+    editItem: '.fa-pen'
   }
 
   return {
@@ -128,8 +144,9 @@ const UICtrl = (function(){
       tasks.forEach((task) => {
         let currentTask = document.createElement('div');
         currentTask.className = 'taskItem';
+        currentTask.setAttribute("data-id", task.id);
         currentTask.innerHTML = `
-        <h4 class="taskTitle">${task.title}<i class="fas fa-pen"></i></h4>
+        <h4 class="taskTitle">${task.title}  <i class="fas fa-pen"></i></h4>
         <p>Priority: ${task.priority}</p>
         <ul>
           <li class="taskStage">${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
@@ -175,6 +192,13 @@ const UICtrl = (function(){
       taskStage3.value = '';
       taskPriority.value = '';
     },
+    // Populates the form fields in the modal for editing
+    populateModal: function(currentTask){
+      taskTitle.value = currentTask.title;
+      taskStage1.value = currentTask.stage1;
+      taskStage2.value = currentTask.stage2;
+      taskStage3.value = currentTask.stage3;
+    },
     // Make UISelectors public
     getUISelectors: function(){
       return UISelectors;
@@ -198,17 +222,25 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     document.querySelector(UISelectors.addModalClose).addEventListener('click', addModalCloseByX);
     // Add item event
     document.querySelector(UISelectors.taskSubmit).addEventListener('click', taskAddSubmit);
+    // Edit an item event
+    document.querySelectorAll(UISelectors.editItem).forEach(function(item){
+      item.addEventListener('click', openEditMode);
+    });
+    
   }
+
   // Open the add task modal
   const addModalOpen = function(e){  
     addModal.style.display = "block";
     e.preventDefault();
   }
+
   // Close the add task modal by clicking on the x
   const addModalCloseByX = function(e){
     addModal.style.display = "none";
     e.preventDefault();
   }
+
   // Add task submit
   const taskAddSubmit = function(e){
     // Get the data submitted by user
@@ -230,6 +262,19 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     //   // Possibly add alert message in div under field
     // }
     e.preventDefault(); 
+  }
+
+  // Open modal to edit existing item
+  const openEditMode = function(e){
+    // Get the ID of the task selected in the UI
+    let currentItemID = e.path[2].getAttribute("data-id");
+    // Set the current task in the data structure to match
+    TaskCtrl.setCurrentTask(currentItemID);
+    // Get the current task
+    let currentTask = TaskCtrl.getCurrentTask();
+    // Populates add item model with data from item to be edited
+    UICtrl.populateModal(currentTask);
+    addModal.style.display = "block";
   }
 
   return {
