@@ -203,11 +203,10 @@ select {
   color: white;
 }
 
-button[type=submit] {
+/* button[type=submit] {
   background: var(--dark-yellow);
   border: none;
   border-bottom: 2px solid var(--darkest-yellow);
   width: 200px;
   height: 30px;
-  
-}
+} */
