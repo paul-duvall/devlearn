@@ -133,6 +133,8 @@ const UICtrl = (function(){
     taskStage3: '#taskStage3',
     taskPriority: '#taskPriority',
     taskSubmit: '#taskSubmit',
+    taskEdit: '#taskEdit',
+    taskDelete: '#taskDelete',
     // Task selectors
     editItem: '.fa-pen'
   }
@@ -199,6 +201,19 @@ const UICtrl = (function(){
       taskStage2.value = currentTask.stage2;
       taskStage3.value = currentTask.stage3;
     },
+    // Clears form, shows add button and hides edit / delete buttons for add state
+    setAddState: function(){
+      UICtrl.clearForm();
+      document.querySelector(UISelectors.taskSubmit).style.display = 'inline';
+      document.querySelector(UISelectors.taskEdit).style.display = 'none';
+      document.querySelector(UISelectors.taskDelete).style.display = 'none';
+
+    },
+    setEditState: function(){
+      document.querySelector(UISelectors.taskSubmit).style.display = 'none';
+      document.querySelector(UISelectors.taskEdit).style.display = 'inline';
+      document.querySelector(UISelectors.taskDelete).style.display = 'inline';
+    },
     // Make UISelectors public
     getUISelectors: function(){
       return UISelectors;
@@ -224,14 +239,14 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     document.querySelector(UISelectors.taskSubmit).addEventListener('click', taskAddSubmit);
     // Edit an item event
     document.querySelectorAll(UISelectors.editItem).forEach(function(item){
-      item.addEventListener('click', openEditMode);
+      item.addEventListener('click', setEditState);
     });
-    
   }
 
   // Open the add task modal
   const addModalOpen = function(e){  
     addModal.style.display = "block";
+    UICtrl.setAddState();
     e.preventDefault();
   }
 
@@ -265,7 +280,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   }
 
   // Open modal to edit existing item
-  const openEditMode = function(e){
+  const setEditState = function(e){
     // Get the ID of the task selected in the UI
     let currentItemID = e.path[2].getAttribute("data-id");
     // Set the current task in the data structure to match
@@ -274,6 +289,9 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     let currentTask = TaskCtrl.getCurrentTask();
     // Populates add item model with data from item to be edited
     UICtrl.populateModal(currentTask);
+    // Set edit state
+    UICtrl.setEditState();
+    // Show modal
     addModal.style.display = "block";
   }
 
