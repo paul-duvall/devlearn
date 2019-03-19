@@ -100,6 +100,10 @@
   color: var(--dark-yellow);
 }
 
+.taskItem .fa-pen {
+  cursor: pointer;
+}
+
 .taskStage {
   list-style-type: none;
 }
