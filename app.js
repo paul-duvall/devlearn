@@ -5,8 +5,8 @@
 const StorageCtrl = (function(){
   // Public methods
   return {
+    // Runs when a new task is added by the user, adding it also to the ls
     storeItem: function(newItem){
-      // Runs when a new task is added by the user, adding it also to the ls
       let items = [];
       // Check to see if there are already items in local storage
       if(localStorage.getItem('items') === null) {
@@ -23,15 +23,31 @@ const StorageCtrl = (function(){
         localStorage.setItem('items', JSON.stringify(items));
       }
     },
+    // Edit item in ls
+    editItemInLS: function(updatedTask) {
+      let items = StorageCtrl.getItemsFromLS();
+      items.forEach((item) => {
+        if(item.id === updatedTask.id) {
+          item.title = updatedTask.title;
+          item.stage1 = updatedTask.stage1;
+          item.stage2 = updatedTask.stage2;
+          item.stage3 = updatedTask.stage3;
+          item.stages = updatedTask.stages;
+        }
+      });
+      console.log(updatedTask);
+      console.log(items);
+      // Reset local storage
+      localStorage.setItem('items', JSON.stringify(items));
+    },
+    // Get items from the ls, updating the UI with those items
     getItemsFromLS: function(){
-      // Get items from the ls, updating the UI with those items
       let items;
       if(localStorage.getItem('items') === null){
         items = [];
       } else {
         items = JSON.parse(localStorage.getItem('items'));
       }
-      console.log(items);
       return items;
     }
   }
@@ -51,7 +67,7 @@ const TaskCtrl = (function(){
     this.stage2 = stage2;
     this.stage3 = stage3;
     this.stages = stages;
-    this.priority = priority;
+    // this.priority = priority;
   }
   
 
@@ -64,6 +80,8 @@ const TaskCtrl = (function(){
     // ],
     // The task currently selected to be edited
     currentTask: null,
+    // The changes made to the current task that need to be applied
+    updatedTask: null,
     // The stage currently selected to be added to current task tracking
     currentStage: null,
   }
@@ -100,6 +118,23 @@ const TaskCtrl = (function(){
           data.currentTask = item;
         }
       }); 
+    },
+    setUpdatedTask: function(title, stage1, stage2, stage3, stages, priority) {
+      let ID = data.currentTask.id;
+      let updatedTask = new Task(ID, title, stage1, stage2, stage3, stages, priority);
+      return updatedTask;
+    },
+    // Update the task in data.items
+    updateTask: function(currentTask, updatedTask){
+      data.items.forEach((item) => {
+        if(item.id === updatedTask.id) {
+          item.title = updatedTask.title;
+          item.stage1 = updatedTask.stage1;
+          item.stage2 = updatedTask.stage2;
+          item.stage3 = updatedTask.stage3;
+          item.stages = updatedTask.stages;
+        }
+      });
     },
     // Make currentTask public
     getCurrentTask: function(){
@@ -142,6 +177,7 @@ const UICtrl = (function(){
   return {
     populateTasks: function(tasks) {
       html = '';
+      document.querySelector(UISelectors.tasksContainer).innerHTML = '';
 
       tasks.forEach((task) => {
         let currentTask = document.createElement('div');
@@ -241,6 +277,8 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     document.querySelectorAll(UISelectors.editItem).forEach(function(item){
       item.addEventListener('click', setEditState);
     });
+    // Apply edit changes event
+    document.querySelector(UISelectors.taskEdit).addEventListener('click', applyChanges);
   }
 
   // Open the add task modal
@@ -293,6 +331,21 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     UICtrl.setEditState();
     // Show modal
     addModal.style.display = "block";
+  }
+
+  // Apply changes to existing item
+  const applyChanges = function(e){
+    e.preventDefault();
+    // Get the updated data submitted by user
+    const formInput = UICtrl.getTaskInput();
+    // Set updatedTask in data structure
+    const updatedTask = TaskCtrl.setUpdatedTask(formInput.title, formInput.stage1, formInput.stage2, formInput.stage3, formInput.priority);
+    
+    let currentTask = TaskCtrl.getCurrentTask();  
+    TaskCtrl.updateTask(currentTask, updatedTask);
+    StorageCtrl.editItemInLS(updatedTask);
+    addModal.style.display = "none";
+    App.init();
   }
 
   return {
