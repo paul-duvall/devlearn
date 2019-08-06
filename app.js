@@ -181,16 +181,18 @@ const UICtrl = (function(){
 
       tasks.forEach((task) => {
         let currentTask = document.createElement('div');
-        currentTask.className = 'taskItem';
+        currentTask.className = 'card m-3';
         currentTask.setAttribute("data-id", task.id);
         currentTask.innerHTML = `
-        <h4 class="taskTitle">${task.title}  <i class="fas fa-pen"></i></h4>
-        <p>Priority: ${task.priority}</p>
-        <ul>
-          <li class="taskStage">${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-          <li class="taskStage">${task.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-          <li class="taskStage">${task.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-        </ul>
+        <div class="card-body">
+          <h4 class="taskTitle">${task.title}  <i class="fas fa-pen"></i></h4>
+          <p>Priority: ${task.priority}</p>
+          <ul>
+            <li class="taskStage">${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+            <li class="taskStage">${task.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+            <li class="taskStage">${task.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          </ul>
+        </div>
         `;
         document.querySelector(UISelectors.tasksContainer).appendChild(currentTask);
       });
@@ -208,16 +210,18 @@ const UICtrl = (function(){
     // Add new item to the UI
     addListItem: function(newTask){
       let task = document.createElement('div');
-      task.className = 'taskItem';
+      task.className = 'card m-3';
       task.id = `item-${newTask.id}`;
       task.innerHTML = `
-        <h4 class="taskTitle">${newTask.title}<i class="fas fa-pen"></i></h4>
-        <p>Priority: ${newTask.priority}</p>
-        <ul>
-          <li class="taskStage">${newTask.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-          <li class="taskStage">${newTask.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-          <li class="taskStage">${newTask.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-        </ul>
+        <div class="card-body">
+          <h4 class="taskTitle">${newTask.title}<i class="fas fa-pen"></i></h4>
+          <p>Priority: ${newTask.priority}</p>
+          <ul>
+            <li class="taskStage">${newTask.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+            <li class="taskStage">${newTask.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+            <li class="taskStage">${newTask.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          </ul>
+        </div>
         `;
         // Insert item
         document.querySelector(UISelectors.tasksContainer).insertAdjacentElement('beforeend', task);  
@@ -320,7 +324,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   // Open modal to edit existing item
   const setEditState = function(e){
     // Get the ID of the task selected in the UI
-    let currentItemID = e.path[2].getAttribute("data-id");
+    let currentItemID = e.path[3].getAttribute("data-id");
     // Set the current task in the data structure to match
     TaskCtrl.setCurrentTask(currentItemID);
     // Get the current task
