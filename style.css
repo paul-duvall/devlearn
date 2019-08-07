@@ -23,7 +23,7 @@
 
 /* *************** Navigation bar *************** */
 
-.navbar {
+/* .navbar {
   background: var(--dark-blue);
   width: 100%;
   margin: 0;
@@ -56,11 +56,11 @@
 
 .fa-plus {
   font-size: 1.8rem;
-}
+} */
 
 /* *************** Right navigation *************** */
 
-.rightNav {
+/* .rightNav {
   background: var(--darkest-blue);
 }
 
@@ -75,11 +75,11 @@
 .rightNav ul li a {
   color: var(--light-yellow);
   text-decoration: none;
-}
+} */
 
 /* *************** Tasks *************** */
 
-.tasksContainer {
+/* .tasksContainer {
   background: var(--darkest-blue);
   display: flex;
   flex-wrap: wrap;
@@ -110,17 +110,17 @@
 
 li {
   padding-left: 5px;
-}
+} */
 
 
 /* ***************** Right navbar ***************** */
-.rightNav {
+/* .rightNav {
   text-align: right;
 }
 
 .rightNav ul li {
   list-style: none;
-}
+} */
 
 /* ************** The Modal (background) ************* */
 .modal {
