@@ -171,7 +171,7 @@ const UICtrl = (function(){
     taskEdit: '#taskEdit',
     taskDelete: '#taskDelete',
     // Task selectors
-    editItem: '.fa-pen'
+    editItem: '.fa-pen'    
   }
 
   return {
