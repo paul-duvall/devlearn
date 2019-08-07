@@ -29,14 +29,9 @@ const StorageCtrl = (function(){
       items.forEach((item) => {
         if(item.id === updatedTask.id) {
           item.title = updatedTask.title;
-          item.stage1 = updatedTask.stage1;
-          item.stage2 = updatedTask.stage2;
-          item.stage3 = updatedTask.stage3;
           item.stages = updatedTask.stages;
         }
       });
-      console.log(updatedTask);
-      console.log(items);
       // Reset local storage
       localStorage.setItem('items', JSON.stringify(items));
     },
@@ -60,12 +55,9 @@ const StorageCtrl = (function(){
 
 const TaskCtrl = (function(){
   // Item constructor
-  const Task = function(id, title, stage1, stage2, stage3, stages, priority){
+  const Task = function(id, title, stages, priority){
     this.id = id;
     this.title = title;
-    this.stage1 = stage1;
-    this.stage2 = stage2;
-    this.stage3 = stage3;
     this.stages = stages;
     // this.priority = priority;
   }
@@ -92,7 +84,7 @@ const TaskCtrl = (function(){
       return data.items;
     },
     // Adds new item to data structure
-    addTask: function(title, stage1, stage2, stage3, stages, priority){
+    addTask: function(title, stages, priority){
       let ID;
       // Create ID for task being added
       if(data.items.length > 0){
@@ -104,7 +96,7 @@ const TaskCtrl = (function(){
       }
 
       // Create new task in data structure
-      let newTask = new Task(ID, title, stage1, stage2, stage3, stages, priority);
+      let newTask = new Task(ID, title, stages, priority);
       // Add newly create task to the items array
       data.items.push(newTask);
       return newTask;      
@@ -119,9 +111,9 @@ const TaskCtrl = (function(){
         }
       }); 
     },
-    setUpdatedTask: function(title, stage1, stage2, stage3, stages, priority) {
+    setUpdatedTask: function(title, stages, priority) {
       let ID = data.currentTask.id;
-      let updatedTask = new Task(ID, title, stage1, stage2, stage3, stages, priority);
+      let updatedTask = new Task(ID, title, stages, priority);
       return updatedTask;
     },
     // Update the task in data.items
@@ -129,9 +121,6 @@ const TaskCtrl = (function(){
       data.items.forEach((item) => {
         if(item.id === updatedTask.id) {
           item.title = updatedTask.title;
-          item.stage1 = updatedTask.stage1;
-          item.stage2 = updatedTask.stage2;
-          item.stage3 = updatedTask.stage3;
           item.stages = updatedTask.stages;
         }
       });
@@ -162,16 +151,38 @@ const UICtrl = (function(){
     modal: '#addModal',
     addModalClose: '#addModalClose',    
     // Form selectors
+    addTaskForm: '#addTaskForm',
     taskTitle: '#taskTitle',
-    taskStage1: '#taskStage1',
-    taskStage2: '#taskStage2',
-    taskStage3: '#taskStage3',
+    taskStage: '.taskStage',
+    currentTaskStage: '.currentTaskStage',
+    addStageButton: '#addStageButton',
     taskPriority: '#taskPriority',
     taskSubmit: '#taskSubmit',
     taskEdit: '#taskEdit',
     taskDelete: '#taskDelete',
     // Task selectors
     editItem: '.fa-pen'    
+  }
+
+  // Creates a new empty stage field to be added to the add / edit modal form
+  const createNewStage = function(stages){
+    let container = document.createElement('div');
+    container.setAttribute("id", `taskContainer${stages.length + 1}`);
+
+    let label = document.createElement('label');
+    let labelText = document.createTextNode("Stage ");
+    label.setAttribute("for", `task-stage${stages.length + 1}`);
+    label.appendChild(labelText);
+
+    let input = document.createElement('input');
+    input.setAttribute("type", "text");
+    input.setAttribute("name", `task-stage${stages.length + 1}`);
+    input.setAttribute("id", `${stages.length + 1}`);
+    input.setAttribute("class", "currentTaskStage");
+
+    container.appendChild(label);
+    container.appendChild(input);
+    return container;
   }
 
   return {
@@ -189,8 +200,6 @@ const UICtrl = (function(){
           <p>Priority: ${task.priority}</p>
           <ul>
             <li class="taskStage">${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-            <li class="taskStage">${task.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-            <li class="taskStage">${task.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
           </ul>
         </div>
         `;
@@ -201,9 +210,7 @@ const UICtrl = (function(){
     getTaskInput: function(){
       return {
         title: taskTitle.value,
-        stage1: taskStage1.value,
-        stage2: taskStage2.value,
-        stage3: taskStage3.value,
+        stages: taskStages.value,
         priority: taskPriority.value
       }
     },    
@@ -218,28 +225,31 @@ const UICtrl = (function(){
           <p>Priority: ${newTask.priority}</p>
           <ul>
             <li class="taskStage">${newTask.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-            <li class="taskStage">${newTask.stage2} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
-            <li class="taskStage">${newTask.stage3} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
           </ul>
         </div>
         `;
         // Insert item
         document.querySelector(UISelectors.tasksContainer).insertAdjacentElement('beforeend', task);  
     },
+    // Add an additional stage to add / edit modal
+    addStage: function(e){
+      let stages = document.querySelectorAll(UISelectors.currentTaskStage);
+      let newStage = createNewStage(stages);
+      // document.querySelector(UISelectors.addTaskForm).insertBefore(newStage, UISelectors.addStageButton);
+      // document.querySelector(UISelectors.addTaskForm).appendChild(newStage);
+      document.querySelector(UISelectors.addStageButton).before(newStage);
+      e.preventDefault();
+    },
     // Clear form fields
     clearForm: function(){
       taskTitle.value = '';
-      taskStage1.value = '';
-      taskStage2.value = '';
-      taskStage3.value = '';
+      // taskStages.value = '';
       taskPriority.value = '';
     },
     // Populates the form fields in the modal for editing
     populateModal: function(currentTask){
       taskTitle.value = currentTask.title;
-      taskStage1.value = currentTask.stage1;
-      taskStage2.value = currentTask.stage2;
-      taskStage3.value = currentTask.stage3;
+      taskStages.value = currentTask.stage1;
     },
     // Clears form, shows add button and hides edit / delete buttons for add state
     setAddState: function(){
@@ -275,6 +285,8 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     document.querySelector(UISelectors.addBtn).addEventListener('click', addModalOpen);
     // Close modal with x event
     document.querySelector(UISelectors.addModalClose).addEventListener('click', addModalCloseByX);
+    // Add an additional stage to add / edit modal
+    document.querySelector(UISelectors.addStageButton).addEventListener('click', UICtrl.addStage);
     // Add item event
     document.querySelector(UISelectors.taskSubmit).addEventListener('click', taskAddSubmit);
     // Edit an item event
@@ -305,7 +317,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     // Ensure that task has been given a title
     if(formInput.title !== ''){
       // Add task
-      const newTask = TaskCtrl.addTask(formInput.title, formInput.stage1, formInput.stage2, formInput.stage3, formInput.priority);
+      const newTask = TaskCtrl.addTask(formInput.title, formInput.stages, formInput.priority);
       // Add new task to the UI list
       UICtrl.addListItem(newTask);
       // Store in local storage
@@ -343,7 +355,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     // Get the updated data submitted by user
     const formInput = UICtrl.getTaskInput();
     // Set updatedTask in data structure
-    const updatedTask = TaskCtrl.setUpdatedTask(formInput.title, formInput.stage1, formInput.stage2, formInput.stage3, formInput.priority);
+    const updatedTask = TaskCtrl.setUpdatedTask(formInput.title, formInput.stages, formInput.priority);
     
     let currentTask = TaskCtrl.getCurrentTask();  
     TaskCtrl.updateTask(currentTask, updatedTask);
