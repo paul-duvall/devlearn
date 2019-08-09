@@ -198,8 +198,16 @@ const UICtrl = (function(){
         <div class="card-body">
           <h4 class="taskTitle">${task.title}  <i class="fas fa-pen"></i></h4>
           <p>Priority: ${task.priority}</p>
-          <ul>
-            <li class="taskStage">${task.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <ul>          
+        `;
+        // Add stages to the task
+        let stages = task.stages;
+        stages.forEach((stage) => {
+          currentTask.innerHTML += `
+            <li class="taskStage">${stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          `;
+        });
+        currentTask.innerHTML += `
           </ul>
         </div>
         `;
@@ -208,9 +216,18 @@ const UICtrl = (function(){
     },
     // Returns form user input
     getTaskInput: function(){
+
+      // Create an array of stages
+      let stagesValues = [];
+      let stages = document.querySelectorAll('.currentTaskStage');
+      stages.forEach((stage) => {
+      let value = stage.value;
+      stagesValues.push(value);
+    });
+
       return {
         title: taskTitle.value,
-        stages: taskStages.value,
+        stages: stagesValues,
         priority: taskPriority.value
       }
     },    
@@ -224,9 +241,17 @@ const UICtrl = (function(){
           <h4 class="taskTitle">${newTask.title}<i class="fas fa-pen"></i></h4>
           <p>Priority: ${newTask.priority}</p>
           <ul>
-            <li class="taskStage">${newTask.stage1} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+        `;
+        // Add stages to the task
+        let stages = newTask.stages;
+        stages.forEach((stage) => {
+          task.innerHTML += `
+          <li class="taskStage">${stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          `;
+        });
+        task.innerHTML += `
           </ul>
-        </div>
+          </div>
         `;
         // Insert item
         document.querySelector(UISelectors.tasksContainer).insertAdjacentElement('beforeend', task);  
@@ -235,8 +260,6 @@ const UICtrl = (function(){
     addStage: function(e){
       let stages = document.querySelectorAll(UISelectors.currentTaskStage);
       let newStage = createNewStage(stages);
-      // document.querySelector(UISelectors.addTaskForm).insertBefore(newStage, UISelectors.addStageButton);
-      // document.querySelector(UISelectors.addTaskForm).appendChild(newStage);
       document.querySelector(UISelectors.addStageButton).before(newStage);
       e.preventDefault();
     },
@@ -313,11 +336,13 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   // Add task submit
   const taskAddSubmit = function(e){
     // Get the data submitted by user
-    const formInput = UICtrl.getTaskInput();
+    const formInput = UICtrl.getTaskInput();  
+    
     // Ensure that task has been given a title
     if(formInput.title !== ''){
       // Add task
       const newTask = TaskCtrl.addTask(formInput.title, formInput.stages, formInput.priority);
+      console.log(newTask);
       // Add new task to the UI list
       UICtrl.addListItem(newTask);
       // Store in local storage
@@ -327,9 +352,9 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
       // Close the modal window
       addModal.style.display = "none";
     } 
-    // else {
-    //   // Possibly add alert message in div under field
-    // }
+    else {
+      // Possibly add alert message in div under field
+    }
     e.preventDefault(); 
   }
 
@@ -368,6 +393,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     init: function(){
       // Declare variable for list of tasks from data object 
       const tasks = TaskCtrl.getItems();
+      console.log(tasks);
       // Populate UI with tasks
       UICtrl.populateTasks(tasks);
       // Load event listeners
