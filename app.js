@@ -168,7 +168,7 @@ const UICtrl = (function(){
   // Creates a new empty stage field to be added to the add / edit modal form
   const createNewStage = function(stages){
     let container = document.createElement('div');
-    container.setAttribute("id", `taskContainer${stages.length + 1}`);
+    container.setAttribute("id", `taskStage${stages.length + 1}`);
 
     let label = document.createElement('label');
     let labelText = document.createTextNode("Stage ");
@@ -261,7 +261,8 @@ const UICtrl = (function(){
     addStage: function(e){
       let stages = document.querySelectorAll(UISelectors.currentTaskStage);
       let newStage = createNewStage(stages);
-      document.querySelector(UISelectors.addStageButton).before(newStage);
+      // document.querySelector(UISelectors.addStageButton).before(newStage);
+      document.querySelector(UISelectors.stagesContainer).appendChild(newStage);
       e.preventDefault();
     },
     // Clear form fields
@@ -350,7 +351,10 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
 
   // Open the add task modal
   const addModalOpen = function(e){  
+    console.log('addModalOpen fired');
     addModal.style.display = "block";
+    // Set form's initial fields (ensuring multiple stages don't appear if previously added by user)
+    // document.getElementById('addTaskForm').innerHTML = '';
     UICtrl.setAddState();
     e.preventDefault();
   }
