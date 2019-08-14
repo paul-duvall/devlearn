@@ -354,7 +354,27 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     console.log('addModalOpen fired');
     addModal.style.display = "block";
     // Set form's initial fields (ensuring multiple stages don't appear if previously added by user)
-    // document.getElementById('addTaskForm').innerHTML = '';
+    stagesContainer = document.getElementById('stagesContainer');
+    let newInitialStage = document.createElement('div');
+    newInitialStage.setAttribute("id", "taskStage1");
+
+    let label = document.createElement('label');
+    let labelText = document.createTextNode("Stage ");
+    label.setAttribute("for", `task-stage1`);
+    label.appendChild(labelText);
+
+    let input = document.createElement('input');
+    input.setAttribute("type", "text");
+    input.setAttribute("name", `task-stage1`);
+    input.setAttribute("id", `1`);
+    input.setAttribute("class", "currentTaskStage");
+
+    newInitialStage.appendChild(label);
+    newInitialStage.appendChild(input);
+
+    stagesContainer.innerHTML = '';
+    stagesContainer.appendChild(newInitialStage);
+
     UICtrl.setAddState();
     e.preventDefault();
   }
