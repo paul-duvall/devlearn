@@ -146,6 +146,7 @@ const UICtrl = (function(){
   // Object contains references to the various selectors needed within the UI Controller (allows these to be easily changed in html as only needs to be edited here in js)
   const UISelectors = {
     tasksContainer: '.tasksContainer',
+    stagesContainer: '#stagesContainer',
     // Add / edit form selectors
     addBtn: '#add',
     modal: '#addModal',
@@ -266,13 +267,40 @@ const UICtrl = (function(){
     // Clear form fields
     clearForm: function(){
       taskTitle.value = '';
-      // taskStages.value = '';
       taskPriority.value = '';
+    },
+    // Ensures that additional stage fields are not applied to subsequent tasks that are edited
+    resetStagesFields: function(){
+      let stagesContainer = document.getElementById('stagesContainer');
+      stagesContainer.innerHTML = `
+      <label for="task-stage1">Stage</label>
+      <input type="text" name="task-stage1" id="taskStage1" class="currentTaskStage">
+      `;
+      console.log(stagesContainer);
     },
     // Populates the form fields in the modal for editing
     populateModal: function(currentTask){
       taskTitle.value = currentTask.title;
-      taskStages.value = currentTask.stage1;
+      taskStages = currentTask.stages;
+      console.log(taskStages);
+      let stagesContainer = document.querySelector('#stagesContainer');
+      let stageTracker = 0;
+      taskStages.forEach((stage) => {        
+        // Populate the remaining stage fields
+        if(stageTracker < taskStages.length && !stage==""){
+          // Populate first stage field
+          if(stageTracker == 0){
+            document.querySelector(`#taskStage1`).setAttribute("value", stage);
+          } else {
+            stagesContainer.innerHTML += `
+          <label for="task-stage${stageTracker + 2}">Stage</label>
+          <input type="text" name="task-stage${stageTracker + 2}" id="taskStage${stageTracker + 2}" class="currentTaskStage">
+          `;
+          document.querySelector(`#taskStage${stageTracker + 2}`).setAttribute("value", `${stage}`);
+          } 
+        }
+        stageTracker++;
+      });
     },
     // Clears form, shows add button and hides edit / delete buttons for add state
     setAddState: function(){
@@ -330,6 +358,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   // Close the add task modal by clicking on the x
   const addModalCloseByX = function(e){
     addModal.style.display = "none";
+    UICtrl.resetStagesFields();
     e.preventDefault();
   }
 
