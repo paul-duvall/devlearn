@@ -17,110 +17,9 @@
   padding: 0;
 }
 
-.container {
-  /* border: 2px solid blue; */
+.container > a {
+  padding-left: 12px;
 }
-
-/* *************** Navigation bar *************** */
-
-/* .navbar {
-  background: var(--dark-blue);
-  width: 100%;
-  margin: 0;
-  font-family: var(--title-font);
-}
-
-.navbar-logo {
-  color: var(--darkest-blue);
-  font-size: 1.7rem;
-  font-weight: 700;
-}
-
-.navbar-logo:hover {
-  color: var(--darkest-blue);
-}
-
-.fa-plus-circle {
-  color: var(--light-yellow);
-  font-size: 3rem;
-}
-
-.fa-plus-circle:hover {
-  color: var(--dark-yellow);
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-}
-
-.fa-plus {
-  font-size: 1.8rem;
-} */
-
-/* *************** Right navigation *************** */
-
-/* .rightNav {
-  background: var(--darkest-blue);
-}
-
-.rightNav ul {
-  padding: 1rem;
-}
-
-.rightNav ul li {
-  padding: .5rem;
-}
-
-.rightNav ul li a {
-  color: var(--light-yellow);
-  text-decoration: none;
-} */
-
-/* *************** Tasks *************** */
-
-/* .tasksContainer {
-  background: var(--darkest-blue);
-  display: flex;
-  flex-wrap: wrap;
-  padding: 20px;
-}
-
-.taskItem {
-  height: 200px;
-  margin: 10px;
-  padding: 20px;
-  color: var(--almost-black);
-  border-radius: 3px;
-  background: var(--dark-blue);
-  box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.5);
-}
-
-.taskItem .fas {
-  color: var(--dark-yellow);
-}
-
-.taskItem .fa-pen {
-  cursor: pointer;
-}
-
-.taskStage {
-  list-style-type: none;
-}
-
-li {
-  padding-left: 5px;
-} */
-
-
-/* ***************** Right navbar ***************** */
-/* .rightNav {
-  text-align: right;
-}
-
-.rightNav ul li {
-  list-style: none;
-} */
 
 /* ************** The Modal (background) ************* */
 .modal {
@@ -133,7 +32,7 @@ li {
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
 }
 
 /* Modal Title and x close button */
@@ -150,8 +49,9 @@ li {
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: var(--dark-blue);
+  background-color: white;
   color: var(--almost-black);
+  border: none;
   max-width: 550px;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
@@ -168,7 +68,6 @@ li {
 
 .close:hover,
 .close:focus {
-  color: var(--dark-yellow);
   text-decoration: none;
   cursor: pointer;
 }
@@ -184,29 +83,34 @@ form button {
 }
 
 input[type=text] {
-  background: var(--darkest-blue);
-  border: 0;
-  color: white;
-  padding: 3px 3px 3px 8px;
+  width: 70%;
 }
 
-input[type=text] {
-  background: var(--darkest-blue);
-  border: 0;
-  color: white;
-  padding: 3px 3px 3px 8px;
+label {
+  margin-bottom: 0;
+  width: 20%;
 }
 
 select {
-  background: var(--darkest-blue);
-  border: 0;
-  color: white;
+  width: 70%;
 }
 
-/* button[type=submit] {
-  background: var(--dark-yellow);
-  border: none;
-  border-bottom: 2px solid var(--darkest-yellow);
-  width: 200px;
-  height: 30px;
-} */
+#stagesContainer > div {
+  padding-top: 8px;
+}
+
+#stagesContainer > div > label {
+  padding-right: 10px;
+}
+
+#addStageButtonContainer {
+  text-align: right;
+  padding-right: 40px;
+  padding-top: 10px;
+}
+
+#addStageButton {
+  width: 100px;
+  cursor: pointer;
+  color: #007bff;
+}
