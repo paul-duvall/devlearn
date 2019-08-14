@@ -146,6 +146,7 @@ const UICtrl = (function(){
   // Object contains references to the various selectors needed within the UI Controller (allows these to be easily changed in html as only needs to be edited here in js)
   const UISelectors = {
     tasksContainer: '.tasksContainer',
+    stagesContainer: '#stagesContainer',
     // Add / edit form selectors
     addBtn: '#add',
     modal: '#addModal',
@@ -167,7 +168,7 @@ const UICtrl = (function(){
   // Creates a new empty stage field to be added to the add / edit modal form
   const createNewStage = function(stages){
     let container = document.createElement('div');
-    container.setAttribute("id", `taskContainer${stages.length + 1}`);
+    container.setAttribute("id", `taskStage${stages.length + 1}`);
 
     let label = document.createElement('label');
     let labelText = document.createTextNode("Stage ");
@@ -260,19 +261,47 @@ const UICtrl = (function(){
     addStage: function(e){
       let stages = document.querySelectorAll(UISelectors.currentTaskStage);
       let newStage = createNewStage(stages);
-      document.querySelector(UISelectors.addStageButton).before(newStage);
+      // document.querySelector(UISelectors.addStageButton).before(newStage);
+      document.querySelector(UISelectors.stagesContainer).appendChild(newStage);
       e.preventDefault();
     },
     // Clear form fields
     clearForm: function(){
       taskTitle.value = '';
-      // taskStages.value = '';
       taskPriority.value = '';
+    },
+    // Ensures that additional stage fields are not applied to subsequent tasks that are edited
+    resetStagesFields: function(){
+      let stagesContainer = document.getElementById('stagesContainer');
+      stagesContainer.innerHTML = `
+      <label for="task-stage1">Stage</label>
+      <input type="text" name="task-stage1" id="taskStage1" class="currentTaskStage">
+      `;
+      console.log(stagesContainer);
     },
     // Populates the form fields in the modal for editing
     populateModal: function(currentTask){
       taskTitle.value = currentTask.title;
-      taskStages.value = currentTask.stage1;
+      taskStages = currentTask.stages;
+      console.log(taskStages);
+      let stagesContainer = document.querySelector('#stagesContainer');
+      let stageTracker = 0;
+      taskStages.forEach((stage) => {        
+        // Populate the remaining stage fields
+        if(stageTracker < taskStages.length && !stage==""){
+          // Populate first stage field
+          if(stageTracker == 0){
+            document.querySelector(`#taskStage1`).setAttribute("value", stage);
+          } else {
+            stagesContainer.innerHTML += `
+          <label for="task-stage${stageTracker + 2}">Stage</label>
+          <input type="text" name="task-stage${stageTracker + 2}" id="taskStage${stageTracker + 2}" class="currentTaskStage">
+          `;
+          document.querySelector(`#taskStage${stageTracker + 2}`).setAttribute("value", `${stage}`);
+          } 
+        }
+        stageTracker++;
+      });
     },
     // Clears form, shows add button and hides edit / delete buttons for add state
     setAddState: function(){
@@ -322,7 +351,30 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
 
   // Open the add task modal
   const addModalOpen = function(e){  
+    console.log('addModalOpen fired');
     addModal.style.display = "block";
+    // Set form's initial fields (ensuring multiple stages don't appear if previously added by user)
+    stagesContainer = document.getElementById('stagesContainer');
+    let newInitialStage = document.createElement('div');
+    newInitialStage.setAttribute("id", "taskStage1");
+
+    let label = document.createElement('label');
+    let labelText = document.createTextNode("Stage ");
+    label.setAttribute("for", `task-stage1`);
+    label.appendChild(labelText);
+
+    let input = document.createElement('input');
+    input.setAttribute("type", "text");
+    input.setAttribute("name", `task-stage1`);
+    input.setAttribute("id", `1`);
+    input.setAttribute("class", "currentTaskStage");
+
+    newInitialStage.appendChild(label);
+    newInitialStage.appendChild(input);
+
+    stagesContainer.innerHTML = '';
+    stagesContainer.appendChild(newInitialStage);
+
     UICtrl.setAddState();
     e.preventDefault();
   }
@@ -330,6 +382,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   // Close the add task modal by clicking on the x
   const addModalCloseByX = function(e){
     addModal.style.display = "none";
+    UICtrl.resetStagesFields();
     e.preventDefault();
   }
 
