@@ -198,7 +198,10 @@ const UICtrl = (function(){
         currentTask.setAttribute("data-id", task.id);
         currentTask.innerHTML = `
         <div class="card-body">
-          <h4 class="taskTitle">${task.title}  <i class="fas fa-pen"></i></h4>
+          <div class="taskTitleContainer">
+            <h4 class="taskTitle">${task.title}</h4>
+            <i class="fas fa-pen"></i>
+          </div>
           <p>Priority: ${task.priority}</p>
           <ul>          
         `;
