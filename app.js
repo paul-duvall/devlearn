@@ -152,6 +152,7 @@ const UICtrl = (function(){
     modal: '#addModal',
     addModalClose: '#addModalClose',    
     // Form selectors
+    modalTitle: '#modalTitle',
     addTaskForm: '#addTaskForm',
     taskTitle: '#taskTitle',
     taskStage: '.taskStage',
@@ -323,6 +324,10 @@ const UICtrl = (function(){
     },
     // Clears form, shows add button and hides edit / delete buttons for add state
     setAddState: function(){
+      // Set title text
+      document.querySelector(UISelectors.modalTitle).innerHTML = 'Add task';
+
+      // Display appropriate buttons
       UICtrl.clearForm();
       document.querySelector(UISelectors.taskSubmit).style.display = 'inline';
       document.querySelector(UISelectors.taskEdit).style.display = 'none';
@@ -330,6 +335,10 @@ const UICtrl = (function(){
 
     },
     setEditState: function(){
+      // Set title text
+      document.querySelector(UISelectors.modalTitle).innerHTML = 'Edit task';
+      
+      // Display appropriate buttons
       document.querySelector(UISelectors.taskSubmit).style.display = 'none';
       document.querySelector(UISelectors.taskEdit).style.display = 'inline';
       document.querySelector(UISelectors.taskDelete).style.display = 'inline';
