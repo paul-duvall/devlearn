@@ -21,7 +21,7 @@
     <div class="tasksContainer center-block">
       <div class="t"></div>
     </div>
-    <a id="add" href="#"><i class="fas fa-plus-circle"></i></a>
+    <a id="add" href="#"><i class="fas fa-plus"></i>  Add new task</a>
   </div>
   
   <!-- Adding an item -->
@@ -30,30 +30,40 @@
   <!-- Add Modal content -->
   <div class="modal-content">
     <div class="modalTop">
-      <h3>Add item</h3>
+      <h3>Add task</h3>
       <div class='close' id="addModalClose">&times;</div>
     </div>
-    <p class="modalSubtitle">Your task will need a title, three key stages to be completed and a priority.</p>
+    <p class="modalSubtitle">Your task will need a title, some key stages to be completed and a priority.</p>
     
     <form id="addTaskForm">
-      <label for="task-title">Task title</label>
-      <input type="text" name="task-title" id="taskTitle">
+      <div class="form-group">
+        <label for="task-title">Task title</label>
+        <input type="text" name="task-title" id="taskTitle">
+      </div>
+      <div class="form-group">
+        <label for="priority">Priority</label>
+        <select name="priority" id="taskPriority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+      </div>
       <div id="stagesContainer">
         <div id="taskStage1">
           <label for="task-stage1">Stage</label>
           <input type="text" name="task-stage1" id="taskStage1" class="currentTaskStage">
         </div>
       </div>
-      <button id="addStageButton">Add a stage</button>
-      <label for="priority">Priority</label>
-      <select name="priority" id="taskPriority">
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
-      <button class="add-btn btn" type="submit" id="taskSubmit">Add</button>
-      <button class="update-btn btn" id="taskEdit">Apply changes</button>
-      <button class="delete-btn btn" id="taskDelete"><i class="fa fa-remove"></i>Delete</button>
+      <div id="addStageButtonContainer">
+        <a id="addStageButton" role="button"><i class="fas fa-plus"></i> Add stage</a>
+      </div>
+         
+      <button class="btn btn-primary" type="submit" id="taskSubmit">Add task</button>
+
+      <button class="update-btn btn btn-primary" id="taskEdit">Apply changes</button>
+
+      <button class="delete-btn btn btn-danger" id="taskDelete"><i class="fa fa-remove"></i>Delete</button>
+
     </form>
   </div>
 
