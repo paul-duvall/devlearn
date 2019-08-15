@@ -35,6 +35,19 @@ const StorageCtrl = (function(){
       // Reset local storage
       localStorage.setItem('items', JSON.stringify(items));
     },
+    // Delete item in ls
+    deleteItemInLS: function() {
+      let items = StorageCtrl.getItemsFromLS();
+      let currentTask = TaskCtrl.getCurrentTask();
+      
+      items.forEach((item) => {
+        let index = items.indexOf(item);
+        if(item.id === currentTask.id) {
+          items.splice(index, 1);
+        }
+        localStorage.setItem('items', JSON.stringify(items));
+      });
+    },
     // Get items from the ls, updating the UI with those items
     getItemsFromLS: function(){
       let items;
@@ -62,14 +75,9 @@ const TaskCtrl = (function(){
     // this.priority = priority;
   }
   
-
   // Data structure / state
   const data = {
     items: StorageCtrl.getItemsFromLS(),
-    // items: [
-    //   {id: 0, title:'Create monkey site', stage1:'Research other sites', stage2:'Source images', stage3:'Learn flexbox', priority:'High'},
-    //   {id: 1, title:'Learn React', stage1:'Complete Udemy Course', stage2:'Research hooks', stage3:'Select project', priority:'Medium'}
-    // ],
     // The task currently selected to be edited
     currentTask: null,
     // The changes made to the current task that need to be applied
@@ -124,6 +132,16 @@ const TaskCtrl = (function(){
           item.stages = updatedTask.stages;
         }
       });
+    },
+    // Delete the task in data.items
+    deleteTask: function(e) {
+      data.items.forEach((item) => {
+        if(item.id === data.currentTask.id) {
+          let index = data.items.indexOf(item);
+          data.items.splice(index, 1);
+        }
+      });
+      e.preventDefault();
     },
     // Make currentTask public
     getCurrentTask: function(){
@@ -285,7 +303,6 @@ const UICtrl = (function(){
     populateModal: function(currentTask){
       taskTitle.value = currentTask.title;
       taskStages = currentTask.stages;
-
       let stagesContainer = document.querySelector('#stagesContainer');
 
       let stageTracker = 0;
@@ -377,6 +394,8 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     });
     // Apply edit changes event
     document.querySelector(UISelectors.taskEdit).addEventListener('click', applyChanges);
+    // Delete task event
+    document.querySelector(UISelectors.taskDelete).addEventListener('click', taskDelete);
   }
 
   // Open the add task modal
@@ -424,7 +443,6 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     if(formInput.title !== ''){
       // Add task
       const newTask = TaskCtrl.addTask(formInput.title, formInput.stages, formInput.priority);
-      console.log(newTask);
       // Add new task to the UI list
       UICtrl.addListItem(newTask);
       // Store in local storage
@@ -469,6 +487,19 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     StorageCtrl.editItemInLS(updatedTask);
     addModal.style.display = "none";
     App.init();
+  }
+
+  // Delete an existing item
+  const taskDelete = function(e){
+    // Delete current task from data structure
+    TaskCtrl.deleteTask(e);
+    // Delete current task from LS
+    StorageCtrl.deleteItemInLS();
+    // Close modal
+    addModal.style.display = "none";
+    // Refresh UI
+    App.init();
+    e.preventDefault();
   }
 
   return {
