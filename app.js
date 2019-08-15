@@ -37,7 +37,16 @@ const StorageCtrl = (function(){
     },
     // Delete item in ls
     deleteItemInLS: function() {
-
+      let items = StorageCtrl.getItemsFromLS();
+      let currentTask = TaskCtrl.getCurrentTask();
+      
+      items.forEach((item) => {
+        let index = items.indexOf(item);
+        if(item.id === currentTask.id) {
+          items.splice(index, 1);
+        }
+        localStorage.setItem('items', JSON.stringify(items));
+      });
     },
     // Get items from the ls, updating the UI with those items
     getItemsFromLS: function(){
@@ -123,15 +132,12 @@ const TaskCtrl = (function(){
           item.stages = updatedTask.stages;
         }
       });
-
     },
     // Delete the task in data.items
     deleteTask: function(e) {
-      console.log(data.items);
       data.items.forEach((item) => {
         if(item.id === data.currentTask.id) {
           let index = data.items.indexOf(item);
-          console.log(index);
           data.items.splice(index, 1);
         }
       });
@@ -487,6 +493,8 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   const taskDelete = function(e){
     // Delete current task from data structure
     TaskCtrl.deleteTask(e);
+    // Delete current task from LS
+    StorageCtrl.deleteItemInLS();
     // Close modal
     addModal.style.display = "none";
     // Refresh UI
