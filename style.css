@@ -1,9 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=PT+Sans+Narrow:700|PT+Sans:400,400i');
 
 :root {
-  --light-yellow: #FFC66B;
-  --dark-yellow: rgb(202, 149, 64);
-  --darkest-yellow: rgb(165, 117, 40);
   --almost-black: rgb(43, 43, 43);
   --darkest-blue: rgb(57, 73, 116);
   --dark-blue: #5A6A95;
@@ -17,8 +14,37 @@
   padding: 0;
 }
 
+body {
+  color: rgb(54, 54, 54);
+}
+
 .container > a {
   padding-left: 12px;
+}
+
+/* ************** The task card  ************** */
+
+.card {
+  padding: 15px;
+}
+
+.card li {
+  list-style: none;
+  padding-left: 17px;
+}
+
+.card .fa-pen {
+  font-size: 23px;
+  color: rgb(53, 53, 53);
+}
+
+.card .fa-pen:hover {
+  color: rgb(20, 20, 20);
+}
+
+.taskTitleContainer {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* ************** The Modal (background) ************* */
