@@ -188,7 +188,7 @@ const UICtrl = (function(){
 
   return {
     populateTasks: function(tasks) {
-      html = '';
+      // html = '';
       document.querySelector(UISelectors.tasksContainer).innerHTML = '';
 
       tasks.forEach((task) => {
@@ -261,7 +261,6 @@ const UICtrl = (function(){
     addStage: function(e){
       let stages = document.querySelectorAll(UISelectors.currentTaskStage);
       let newStage = createNewStage(stages);
-      // document.querySelector(UISelectors.addStageButton).before(newStage);
       document.querySelector(UISelectors.stagesContainer).appendChild(newStage);
       e.preventDefault();
     },
@@ -277,28 +276,47 @@ const UICtrl = (function(){
       <label for="task-stage1">Stage</label>
       <input type="text" name="task-stage1" id="taskStage1" class="currentTaskStage">
       `;
-      console.log(stagesContainer);
     },
     // Populates the form fields in the modal for editing
     populateModal: function(currentTask){
       taskTitle.value = currentTask.title;
       taskStages = currentTask.stages;
-      console.log(taskStages);
+
       let stagesContainer = document.querySelector('#stagesContainer');
+
       let stageTracker = 0;
+
       taskStages.forEach((stage) => {        
-        // Populate the remaining stage fields
         if(stageTracker < taskStages.length && !stage==""){
+          let newStage = document.createElement('div');
           // Populate first stage field
           if(stageTracker == 0){
-            document.querySelector(`#taskStage1`).setAttribute("value", stage);
+            // Clear existing contents of StagesContainer
+            document.querySelector(UISelectors.stagesContainer).innerHTML = '';
+            // Set id of first stage
+            newStage.setAttribute("id", `taskStage1`);
           } else {
-            stagesContainer.innerHTML += `
-          <label for="task-stage${stageTracker + 2}">Stage</label>
-          <input type="text" name="task-stage${stageTracker + 2}" id="taskStage${stageTracker + 2}" class="currentTaskStage">
-          `;
-          document.querySelector(`#taskStage${stageTracker + 2}`).setAttribute("value", `${stage}`);
+            // Set id of subsequent stages
+            newStage.setAttribute("id", `taskStage${stageTracker + 1}`);
           } 
+
+          // Create the label for the current stage
+          let label = document.createElement('label');
+          let labelText = document.createTextNode("Stage ");
+          label.setAttribute("for", `task-stage${stageTracker + 2}`);
+          label.appendChild(labelText);
+
+          // Create the input field for the current stage
+          let input = document.createElement('input');
+          input.setAttribute("type", "text");
+          input.setAttribute("name", `task-stage${stageTracker + 2}`);
+          input.setAttribute("id", `taskStage${stageTracker + 2}`);
+          input.setAttribute("class", "currentTaskStage");
+          input.setAttribute("value", `${stage}`);
+
+          newStage.appendChild(label);
+          newStage.appendChild(input);
+          stagesContainer.appendChild(newStage);
         }
         stageTracker++;
       });
@@ -351,7 +369,6 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
 
   // Open the add task modal
   const addModalOpen = function(e){  
-    console.log('addModalOpen fired');
     addModal.style.display = "block";
     // Set form's initial fields (ensuring multiple stages don't appear if previously added by user)
     stagesContainer = document.getElementById('stagesContainer');
@@ -446,7 +463,6 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     init: function(){
       // Declare variable for list of tasks from data object 
       const tasks = TaskCtrl.getItems();
-      console.log(tasks);
       // Populate UI with tasks
       UICtrl.populateTasks(tasks);
       // Load event listeners
