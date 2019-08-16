@@ -30,6 +30,7 @@ const StorageCtrl = (function(){
         if(item.id === updatedTask.id) {
           item.title = updatedTask.title;
           item.stages = updatedTask.stages;
+          item.priority = updatedTask.priority;
         }
       });
       // Reset local storage
