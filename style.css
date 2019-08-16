@@ -47,6 +47,18 @@ body {
   justify-content: space-between;
 }
 
+.taskPriorityLow {
+  color: #28a745;
+}
+
+.taskPriorityMedium {
+  color: #E2AB06;
+}
+
+.taskPriorityHigh {
+  color: #dc3545;
+}
+
 /* ************** The Modal (background) ************* */
 .modal {
   display: none; /* Hidden by default */

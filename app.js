@@ -72,7 +72,7 @@ const TaskCtrl = (function(){
     this.id = id;
     this.title = title;
     this.stages = stages;
-    // this.priority = priority;
+    this.priority = priority;
   }
   
   // Data structure / state
@@ -130,6 +130,7 @@ const TaskCtrl = (function(){
         if(item.id === updatedTask.id) {
           item.title = updatedTask.title;
           item.stages = updatedTask.stages;
+          item.priority = updatedTask.priority;
         }
       });
     },
@@ -207,7 +208,6 @@ const UICtrl = (function(){
 
   return {
     populateTasks: function(tasks) {
-      // html = '';
       document.querySelector(UISelectors.tasksContainer).innerHTML = '';
 
       tasks.forEach((task) => {
@@ -220,9 +220,25 @@ const UICtrl = (function(){
             <h4 class="taskTitle">${task.title}</h4>
             <i class="fas fa-pen"></i>
           </div>
-          <p>Priority: ${task.priority}</p>
+        `;
+
+        if(task.priority == "low"){
+          currentTask.innerHTML += `
+            <p class="taskPriorityLow">Priority: ${task.priority}</p>
+            <ul>          
+          `;
+        } else if (task.priority == "medium") {
+          currentTask.innerHTML += `
+          <p class="taskPriorityMedium">Priority: ${task.priority}</p>
           <ul>          
         `;
+        } else if (task.priority == "high") {
+          currentTask.innerHTML += `
+          <p class="taskPriorityHigh">Priority: ${task.priority}</p>
+          <ul>          
+        `;
+        }
+      
         // Add stages to the task
         let stages = task.stages;
         stages.forEach((stage) => {
@@ -262,9 +278,25 @@ const UICtrl = (function(){
       task.innerHTML = `
         <div class="card-body">
           <h4 class="taskTitle">${newTask.title}<i class="fas fa-pen"></i></h4>
-          <p>Priority: ${newTask.priority}</p>
-          <ul>
         `;
+        
+        if(newTask.priority == "low"){
+          task.innerHTML += `
+            <p class="taskPriorityLow">Priority: ${newTask.priority}</p>
+            <ul>          
+          `;
+        } else if (newTask.priority == "medium") {
+          task.innerHTML += `
+          <p class="taskPriorityMedium">Priority: ${newTask.priority}</p>
+          <ul>          
+        `;
+        } else if (newTask.priority == "high") {
+          task.innerHTML += `
+          <p class="taskPriorityHigh">Priority: ${newTask.priority}</p>
+          <ul>          
+        `;
+        }
+        
         // Add stages to the task
         let stages = newTask.stages;
         stages.forEach((stage) => {
@@ -438,7 +470,6 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   const taskAddSubmit = function(e){
     // Get the data submitted by user
     const formInput = UICtrl.getTaskInput();  
-    
     // Ensure that task has been given a title
     if(formInput.title !== ''){
       // Add task
@@ -481,7 +512,8 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     const formInput = UICtrl.getTaskInput();
     // Set updatedTask in data structure
     const updatedTask = TaskCtrl.setUpdatedTask(formInput.title, formInput.stages, formInput.priority);
-    
+    console.log(updatedTask);
+
     let currentTask = TaskCtrl.getCurrentTask();  
     TaskCtrl.updateTask(currentTask, updatedTask);
     StorageCtrl.editItemInLS(updatedTask);
