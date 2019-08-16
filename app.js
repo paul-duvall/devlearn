@@ -30,6 +30,7 @@ const StorageCtrl = (function(){
         if(item.id === updatedTask.id) {
           item.title = updatedTask.title;
           item.stages = updatedTask.stages;
+          item.priority = updatedTask.priority;
         }
       });
       // Reset local storage
@@ -334,6 +335,7 @@ const UICtrl = (function(){
     // Populates the form fields in the modal for editing
     populateModal: function(currentTask){
       taskTitle.value = currentTask.title;
+      taskPriority.value = currentTask.priority;
       taskStages = currentTask.stages;
       let stagesContainer = document.querySelector('#stagesContainer');
 
@@ -512,7 +514,6 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     const formInput = UICtrl.getTaskInput();
     // Set updatedTask in data structure
     const updatedTask = TaskCtrl.setUpdatedTask(formInput.title, formInput.stages, formInput.priority);
-    console.log(updatedTask);
 
     let currentTask = TaskCtrl.getCurrentTask();  
     TaskCtrl.updateTask(currentTask, updatedTask);
