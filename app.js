@@ -278,8 +278,11 @@ const UICtrl = (function(){
       task.id = `item-${newTask.id}`;
       task.innerHTML = `
         <div class="card-body">
-          <h4 class="taskTitle">${newTask.title}<i class="fas fa-pen"></i></h4>
-        `;
+        <div class="taskTitleContainer">
+          <h4 class="taskTitle">${newTask.title}</h4>
+          <i class="fas fa-pen"></i>
+        </div>
+      `;
         
         if(newTask.priority == "low"){
           task.innerHTML += `
