@@ -174,6 +174,7 @@ const UICtrl = (function(){
     // Form selectors
     modalTitle: '#modalTitle',
     addTaskForm: '#addTaskForm',
+    modalAlertContainer: '.alert',
     taskTitle: '#taskTitle',
     taskStage: '.taskStage',
     currentTaskStage: '.currentTaskStage',
@@ -438,6 +439,9 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   // Open the add task modal
   const addModalOpen = function(e){  
     addModal.style.display = "block";
+    // Ensure any alerts previously displayed are hidden
+    let alertContainer = document.querySelector('.alert');
+      alertContainer.style.display = "none";
     // Set form's initial fields (ensuring multiple stages don't appear if previously added by user)
     stagesContainer = document.getElementById('stagesContainer');
     let newInitialStage = document.createElement('div');
@@ -475,8 +479,18 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
   const taskAddSubmit = function(e){
     // Get the data submitted by user
     const formInput = UICtrl.getTaskInput();  
-    // Ensure that task has been given a title
-    if(formInput.title !== ''){
+        
+    if(formInput.title == "" || formInput.priority == ''){  
+      let alertContainer = document.querySelector('.alert');
+      alertContainer.style.display = "block";
+      if(formInput.title == ''){
+        alertContainer.innerHTML = ``;
+        alertContainer.innerHTML = `Add a title for your task.`;
+      } else if(formInput.priority == "") {
+        alertContainer.innerHTML = ``;
+        alertContainer.innerHTML = `Add a priority for your task.`;
+      } 
+    } else {
       // Add task
       const newTask = TaskCtrl.addTask(formInput.title, formInput.stages, formInput.priority);
       // Add new task to the UI list
@@ -487,9 +501,6 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
       UICtrl.clearForm();
       // Close the modal window
       addModal.style.display = "none";
-    } 
-    else {
-      // Possibly add alert message in div under field
     }
     e.preventDefault(); 
   }
