@@ -511,7 +511,8 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
 
   // Open the add task modal
   const addModalOpen = function(e){  
-    addModal.style.display = "block";
+    // addModal.style.display = "block";
+    document.querySelector('#addModal').style.display = "block";
     // Ensure any alerts previously displayed are hidden
     let alertContainer = document.querySelector('.alert');
       alertContainer.style.display = "none";
