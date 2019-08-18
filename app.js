@@ -49,6 +49,25 @@ const StorageCtrl = (function(){
         localStorage.setItem('items', JSON.stringify(items));
       });
     },
+    // Edit a stage within a task to mark as complete / incomplete
+    editStageInLS: function(currentTask, currentStage) {
+      let items = StorageCtrl.getItemsFromLS();
+      // Check each item in LS to see if it matched the current task  
+      items.forEach((item) => {
+        // If they match, check each stage and update the complete property of the appropriate stage
+        if(currentTask.id == item.id){
+          let stages = item.stages;
+
+          stages.forEach((stage) => {
+            if(stage.stage == currentStage.stage) {
+              stage.complete = !stage.complete;
+            }
+          });       
+        }
+      });
+      // Reset local storage
+      localStorage.setItem('items', JSON.stringify(items));
+    },
     // Get items from the ls, updating the UI with those items
     getItemsFromLS: function(){
       let items;
@@ -74,6 +93,12 @@ const TaskCtrl = (function(){
     this.title = title;
     this.stages = stages;
     this.priority = priority;
+  }
+
+  // Stage constructor
+  const Stage = function(stage){
+    this.stage = stage;
+    this.complete = false;
   }
   
   // Data structure / state
@@ -104,8 +129,17 @@ const TaskCtrl = (function(){
         ID = 0;
       }
 
+      // Create array of stage objects
+      let stagesArray = [];
+
+      stages.forEach((stage) => {
+        let newStage = new Stage(stage);
+        stagesArray.push(newStage);
+      });
+
       // Create new task in data structure
-      let newTask = new Task(ID, title, stages, priority);
+      let newTask = new Task(ID, title, stagesArray, priority);
+      
       // Add newly create task to the items array
       data.items.push(newTask);
       return newTask;      
@@ -144,6 +178,29 @@ const TaskCtrl = (function(){
         }
       });
       e.preventDefault();
+    },
+    setStageComplete: function(currentTask, currentStage) {
+      // Check each task in the data structure to see if it matches the task from the UI in which the selected stage is located
+      data.items.forEach((task) => {
+        if(task.id == currentTask.id){
+          // For each stage in the selected task, check to see if it matches the chosen stage in the UI
+          let stages = task.stages;
+          stages.forEach((stage) => {
+            if(stage.stage == currentStage.stage){
+              // If the stage in the data structure matches the stage selected in the UI, change the complete boolean
+              data.items.forEach((task) => {
+                if(task.id == currentTask.id) {
+                  stages.forEach((stage) => {
+                    if(stage.stage == currentStage.stage){
+                      stage.complete = !stage.complete;
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
     },
     // Make currentTask public
     getCurrentTask: function(){
@@ -184,7 +241,8 @@ const UICtrl = (function(){
     taskEdit: '#taskEdit',
     taskDelete: '#taskDelete',
     // Task selectors
-    editItem: '.fa-pen'    
+    editItem: '.fa-pen',
+    markComplete: '.fa-check'  
   }
 
   // Creates a new empty stage field to be added to the add / edit modal form
@@ -244,9 +302,19 @@ const UICtrl = (function(){
         // Add stages to the task
         let stages = task.stages;
         stages.forEach((stage) => {
-          currentTask.innerHTML += `
-            <li class="taskStage">${stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          // Check if current stage should be marked comlete
+          if(stage.complete) {
+            // show as complete
+            currentTask.innerHTML += `
+            <li class="taskStage">${stage.stage} <i class="fas fa-check complete"></i></i></li>
           `;
+          } else {
+            // show as incomplete
+            currentTask.innerHTML += `
+            <li class="taskStage">${stage.stage} <i class="fas fa-check incomplete"></i></i></li>
+          `;
+          }
+          
         });
         currentTask.innerHTML += `
           </ul>
@@ -285,6 +353,7 @@ const UICtrl = (function(){
         </div>
       `;
         
+        // Set the priority field
         if(newTask.priority == "low"){
           task.innerHTML += `
             <p class="taskPriorityLow">Priority: ${newTask.priority}</p>
@@ -306,7 +375,7 @@ const UICtrl = (function(){
         let stages = newTask.stages;
         stages.forEach((stage) => {
           task.innerHTML += `
-          <li class="taskStage">${stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li class="taskStage">${stage.stage} <i class="fas fa-check"></i></li>
           `;
         });
         task.innerHTML += `
@@ -371,7 +440,7 @@ const UICtrl = (function(){
           input.setAttribute("name", `task-stage${stageTracker + 2}`);
           input.setAttribute("id", `taskStage${stageTracker + 2}`);
           input.setAttribute("class", "currentTaskStage");
-          input.setAttribute("value", `${stage}`);
+          input.setAttribute("value", `${stage.stage}`);
 
           newStage.appendChild(label);
           newStage.appendChild(input);
@@ -422,6 +491,10 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     document.querySelector(UISelectors.addBtn).addEventListener('click', addModalOpen);
     // Close modal with x event
     document.querySelector(UISelectors.addModalClose).addEventListener('click', addModalCloseByX);
+    // Mark a stage as complete
+    document.querySelectorAll(UISelectors.markComplete).forEach(function(tick){
+      tick.addEventListener('click', markStageComplete);
+    });   
     // Add an additional stage to add / edit modal
     document.querySelector(UISelectors.addStageButton).addEventListener('click', UICtrl.addStage);
     // Add item event
@@ -547,6 +620,29 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
     // Refresh UI
     App.init();
     e.preventDefault();
+  }
+
+  // Mark a stage as complete
+  const markStageComplete = function(e){
+    let selectedStageValue = e.path[1].childNodes[0].data;
+    
+    let data = TaskCtrl.logData();
+    // Change the complete value of the selected stage to true
+    // Check each task in the data object
+    data.items.forEach((task) => {
+      // For each task in the data structure, check that the id matches the id of the task in the UI that the selected stage is associated with
+      if(task.id == e.path[2].attributes[1].nodeValue) {
+        let stages = task.stages;
+        // For each stage of the task in the data structure, check if it matches the stage selected in the UI
+        stages.forEach((stage) => {
+          if(stage.stage.trim() == selectedStageValue.trim()) {
+            TaskCtrl.setStageComplete(task, stage);
+            StorageCtrl.editStageInLS(task, stage);
+            App.init();
+          }
+        });
+      }
+    });
   }
 
   return {
