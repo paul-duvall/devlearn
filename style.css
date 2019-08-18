@@ -59,6 +59,14 @@ body {
   color: #dc3545;
 }
 
+.complete {
+  color: #28a745;
+}
+
+.incomplete {
+  color: rgb(53, 53, 53);
+}
+
 /* ************** The Modal (background) ************* */
 .modal {
   display: none; /* Hidden by default */

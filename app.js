@@ -49,6 +49,25 @@ const StorageCtrl = (function(){
         localStorage.setItem('items', JSON.stringify(items));
       });
     },
+    // Edit a stage within a task to mark as complete / incomplete
+    editStageInLS: function(currentTask, currentStage) {
+      let items = StorageCtrl.getItemsFromLS();
+      // Check each item in LS to see if it matched the current task  
+      items.forEach((item) => {
+        // If they match, check each stage and update the complete property of the appropriate stage
+        if(currentTask.id == item.id){
+          let stages = item.stages;
+
+          stages.forEach((stage) => {
+            if(stage.stage == currentStage.stage) {
+              stage.complete = !stage.complete;
+            }
+          });       
+        }
+      });
+      // Reset local storage
+      localStorage.setItem('items', JSON.stringify(items));
+    },
     // Get items from the ls, updating the UI with those items
     getItemsFromLS: function(){
       let items;
@@ -174,7 +193,6 @@ const TaskCtrl = (function(){
                   stages.forEach((stage) => {
                     if(stage.stage == currentStage.stage){
                       stage.complete = !stage.complete;
-                      console.log(stage);
                     }
                   });
                 }
@@ -285,10 +303,18 @@ const UICtrl = (function(){
         let stages = task.stages;
         stages.forEach((stage) => {
           // Check if current stage should be marked comlete
-          console.log(stage);
-          currentTask.innerHTML += `
-            <li class="taskStage">${stage.stage} <i class="fas fa-check"></i></i></li>
+          if(stage.complete) {
+            // show as complete
+            currentTask.innerHTML += `
+            <li class="taskStage">${stage.stage} <i class="fas fa-check complete"></i></i></li>
           `;
+          } else {
+            // show as incomplete
+            currentTask.innerHTML += `
+            <li class="taskStage">${stage.stage} <i class="fas fa-check incomplete"></i></i></li>
+          `;
+          }
+          
         });
         currentTask.innerHTML += `
           </ul>
@@ -611,6 +637,8 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
         stages.forEach((stage) => {
           if(stage.stage.trim() == selectedStageValue.trim()) {
             TaskCtrl.setStageComplete(task, stage);
+            StorageCtrl.editStageInLS(task, stage);
+            App.init();
           }
         });
       }
