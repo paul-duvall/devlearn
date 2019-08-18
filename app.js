@@ -118,11 +118,9 @@ const TaskCtrl = (function(){
         stagesArray.push(newStage);
       });
 
-      console.log(stagesArray);
-
       // Create new task in data structure
       let newTask = new Task(ID, title, stagesArray, priority);
-      console.log(newTask);
+      
       // Add newly create task to the items array
       data.items.push(newTask);
       return newTask;      
@@ -262,7 +260,7 @@ const UICtrl = (function(){
         let stages = task.stages;
         stages.forEach((stage) => {
           currentTask.innerHTML += `
-            <li class="taskStage">${stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+            <li class="taskStage">${stage.stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
           `;
         });
         currentTask.innerHTML += `
@@ -302,6 +300,7 @@ const UICtrl = (function(){
         </div>
       `;
         
+        // Set the priority field
         if(newTask.priority == "low"){
           task.innerHTML += `
             <p class="taskPriorityLow">Priority: ${newTask.priority}</p>
@@ -323,7 +322,7 @@ const UICtrl = (function(){
         let stages = newTask.stages;
         stages.forEach((stage) => {
           task.innerHTML += `
-          <li class="taskStage">${stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
+          <li class="taskStage">${stage.stage} <i class="fas fa-check"></i> <i class="fas fa-sticky-note"></i></li>
           `;
         });
         task.innerHTML += `
@@ -388,7 +387,7 @@ const UICtrl = (function(){
           input.setAttribute("name", `task-stage${stageTracker + 2}`);
           input.setAttribute("id", `taskStage${stageTracker + 2}`);
           input.setAttribute("class", "currentTaskStage");
-          input.setAttribute("value", `${stage}`);
+          input.setAttribute("value", `${stage.stage}`);
 
           newStage.appendChild(label);
           newStage.appendChild(input);
