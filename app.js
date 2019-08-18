@@ -75,6 +75,12 @@ const TaskCtrl = (function(){
     this.stages = stages;
     this.priority = priority;
   }
+
+  // Stage constructor
+  const Stage = function(stage){
+    this.stage = stage;
+    this.complete = false;
+  }
   
   // Data structure / state
   const data = {
@@ -104,8 +110,19 @@ const TaskCtrl = (function(){
         ID = 0;
       }
 
+      // Create array of stage objects
+      let stagesArray = [];
+
+      stages.forEach((stage) => {
+        let newStage = new Stage(stage);
+        stagesArray.push(newStage);
+      });
+
+      console.log(stagesArray);
+
       // Create new task in data structure
-      let newTask = new Task(ID, title, stages, priority);
+      let newTask = new Task(ID, title, stagesArray, priority);
+      console.log(newTask);
       // Add newly create task to the items array
       data.items.push(newTask);
       return newTask;      
