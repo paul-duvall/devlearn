@@ -375,7 +375,7 @@ const UICtrl = (function(){
         let stages = newTask.stages;
         stages.forEach((stage) => {
           task.innerHTML += `
-          <li class="taskStage">${stage.stage} <i class="fas fa-check"></i></li>
+          <li class="taskStage">${stage.stage} <i class="fas fa-check incomplete"></i></li>
           `;
         });
         task.innerHTML += `
@@ -576,6 +576,7 @@ const App = (function(TaskCtrl, StorageCtrl, UICtrl){
       // Close the modal window
       addModal.style.display = "none";
     }
+    App.init();
     e.preventDefault(); 
   }
 
